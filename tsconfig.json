@@ -8,7 +8,7 @@
       "useDefineForClassFields": true,
       "module": "ESNext",
       "strict": true,
-      "allowJs": false,
+      "allowJs": true,
       "sourceMap": true,
       "esModuleInterop": true,
       "isolatedModules": true,
