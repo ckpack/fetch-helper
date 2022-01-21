@@ -1,4 +1,4 @@
-import type { Middleware } from './compose';
+import type { RequestMiddleware, ResponseMiddleware } from './compose';
 import { compose } from './compose';
 
 export const responseTypes = {
@@ -12,8 +12,8 @@ export const responseTypes = {
 export interface FetchConfig extends RequestInit {
   responseType?: keyof typeof responseTypes,
   interceptors?: {
-    request?: Middleware[],
-    response?: Middleware[],
+    request?: RequestMiddleware[],
+    response?: ResponseMiddleware[],
   },
   timeout?: number,
 }

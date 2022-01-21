@@ -3,3 +3,5 @@ coverage
 es
 dist
 __test__
+.eslintrc.cjs
+commitlint.config.cjs

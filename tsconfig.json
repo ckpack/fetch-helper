@@ -9,7 +9,7 @@
       "module": "ESNext",
       "strict": true,
       "allowJs": true,
-      "sourceMap": true,
+      "sourceMap": false,
       "esModuleInterop": true,
       "isolatedModules": true,
       "skipLibCheck": true,
@@ -17,6 +17,6 @@
       "rootDir": "./src",
       "baseUrl": "./",
     },
-    "include": ["src/**/*", "__test/**/*", ".eslintrc.cjs", "commitlint.config.cjs"],
+    "include": ["src/**/*", "__test/**/*"],
     "exclude": ["node_modules"]
   }
