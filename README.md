@@ -1,2 +1,2 @@
-# k-fetch
- fetch 简单封装
+# fetch-helper
+对`fetch`的简单封装

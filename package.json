@@ -1,5 +1,5 @@
 {
-  "name": "@ckpack/parameter",
+  "name": "@ckpack/fetch-helper",
   "version": "2.6.1",
   "description": "JSON validator for Node.js and browser",
   "type": "module",
@@ -16,8 +16,8 @@
     "build:es": "rm -rf ./es/* && tsc",
     "build:min": "rm -rf ./dist/* && npm run build:min:es && npm run build:min:iife",
     "build:min:es": "esbuild ./src/index.ts --bundle --minify --format=esm --outfile=./dist/index.es.js",
-    "build:min:iife": "esbuild ./src/index.ts --bundle --minify --format=iife --global-name=kFetch --outfile=./dist/index.iife.js --footer:js=\"kFetch = kFetch.default;\"",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "build:min:iife": "esbuild ./src/index.ts --bundle --minify --format=iife --global-name=fetchHelper --outfile=./dist/index.iife.js --footer:js=\"fetchHelper = fetchHelper.default;\"",
+    "lint": "eslint . --ext .js,.ts --fix",
     "release": "standard-version",
     "prepare": "husky install"
   },
@@ -48,10 +48,11 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+      "eslint . --ext .js,.ts --fix"
     ]
   },
   "dependencies": {
+    "eslint-config-airbnb-typescript": "^16.1.0",
     "node-fetch": "^3.2.0"
   }
 }

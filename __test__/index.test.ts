@@ -1,11 +1,11 @@
 /* eslint-env jest */
 import fetch from 'node-fetch';
-// import kFetch from '../src/index'
+// import FetchHelper from '../src/index'
 
 console.log(fetch)
 // globalThis.fetch = fetch;
 describe(__filename, () => {
-  test('kFetch', async () => {
+  test('FetchHelper', async () => {
     const res = await fetch('baidu.com');
     console.log(res);
   });

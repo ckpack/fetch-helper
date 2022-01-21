@@ -1,5 +1,5 @@
-import type { FetchConfig } from './k-fetch'
-import { KFetch } from './k-fetch'
+import type { FetchConfig } from './fetch-helper';
+import { FetchHelper } from './fetch-helper';
 
 const defaultConfigt: FetchConfig = {
   mode: 'same-origin',
@@ -7,20 +7,20 @@ const defaultConfigt: FetchConfig = {
   responseType: 'json',
   interceptors: {
     request: [],
-    response: []
-  }
-}
+    response: [],
+  },
+};
 
-function createInstance (defaultConfig?: FetchConfig) {
-  const context = new KFetch(defaultConfig)
+function createInstance(defaultConfig?: FetchConfig) {
+  const context = new FetchHelper(defaultConfig);
   const instance:typeof context.request & {
     create?: typeof createInstance
-  } = context.request.bind(context)
+  } = context.request.bind(context);
   instance.create = (createConfig?: FetchConfig) => createInstance({
     ...defaultConfig,
-    ...createConfig
-  })
-  return instance
+    ...createConfig,
+  });
+  return instance;
 }
 
-export default createInstance(defaultConfigt)
+export default createInstance(defaultConfigt);
