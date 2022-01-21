@@ -1,0 +1,5 @@
+node_modules
+coverage
+es
+dist
+__test__

@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+      "outDir": "es",
+      "declaration": true,
+      "removeComments": true,
+      "noImplicitAny": true,
+      "target": "esnext",
+      "useDefineForClassFields": true,
+      "module": "ESNext",
+      "strict": true,
+      "jsx": "preserve",
+      "allowJs": false,
+      "sourceMap": true,
+      "esModuleInterop": true,
+      "isolatedModules": true,
+      "skipLibCheck": true,
+      "lib": ["ESNext", "DOM"],
+      "rootDir": "./src",
+      "baseUrl": "./",
+    },
+    "include": ["src/**/*", "__test/**/*", ".eslintrc.cjs", "commitlint.config.cjs"],
+    "exclude": ["node_modules"]
+  }
