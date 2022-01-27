@@ -1,4 +1,3 @@
-/*eslint no-undef: "off"*/
 module.exports = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest'

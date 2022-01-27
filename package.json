@@ -11,7 +11,7 @@
   ],
   "repository": "https://github.com/ckpack/fetch-helper",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "npm run build:es && npm run build:min",
     "build:es": "rm -rf ./es/* && tsc",
     "build:min": "rm -rf ./dist/* && npm run build:min:es && npm run build:min:iife",
@@ -35,16 +35,17 @@
     "eslint": "^8.7.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-config-airbnb-typescript": "^16.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
     "typescript": "^4.5.5",
-    "esbuild": "^0.14.12",
+    "esbuild": "^0.14.14",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
-    "lint-staged": "^12.2.2",
+    "lint-staged": "^12.3.2",
     "standard-version": "^9.3.2",
     "ts-jest": "^27.1.3",
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "node-fetch": "^3.2.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -52,6 +53,5 @@
     ]
   },
   "dependencies": {
-    "node-fetch": "^3.2.0"
   }
 }
