@@ -1,16 +1,7 @@
 import type { RequestMiddleware, ResponseMiddleware } from './compose';
 import { compose } from './compose';
 
-export const responseTypes = {
-  json: 'json',
-  blob: 'blob',
-  formData: 'formData',
-  arrayBuffer: 'arrayBuffer',
-  text: 'text',
-};
-
 export interface FetchConfig extends RequestInit {
-  responseType?: keyof typeof responseTypes,
   interceptors?: {
     request?: RequestMiddleware[],
     response?: ResponseMiddleware[],

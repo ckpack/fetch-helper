@@ -12,12 +12,11 @@ describe('FetchHelper', () => {
   test('FetchHelper: interceptors', async () => {
     const fetchHelper = FetchHelper.create({
       interceptors: {
-        response: [async (response, config) => {
-          return await response[config.responseType]();
+        response: [(response, config) => {
+          return response.json();
         }]
       }
     });
-
     const res = await fetchHelper('https://jsonplaceholder.typicode.com/posts/1');
     expect(res.constructor.name).toEqual('Object');
   });

@@ -4,7 +4,6 @@ import { FetchHelper } from './fetch-helper';
 const defaultConfigt: FetchConfig = {
   mode: 'same-origin',
   method: 'GET',
-  responseType: 'json',
   interceptors: {
     request: [],
     response: [],
