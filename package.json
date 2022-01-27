@@ -1,6 +1,6 @@
 {
   "name": "@ckpack/fetch-helper",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Fetch simple wrapper helper",
   "type": "module",
   "main": "es/index.js",
@@ -52,6 +52,5 @@
       "eslint . --ext .js,.ts --fix"
     ]
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

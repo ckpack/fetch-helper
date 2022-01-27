@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/ckpack/fetch-helper/compare/v0.0.3...v0.0.4) (2022-01-27)
+
+
+### Features
+
+* 添加单元测试 ([70351e4](https://github.com/ckpack/fetch-helper/commit/70351e4c101b75e57d8d824b8c56a7b74b7ab5da))
+* 添加说明文档 ([42908c2](https://github.com/ckpack/fetch-helper/commit/42908c2dc241e845b94e39580ca2789bad5a98e6))
+
 ### [0.0.3](https://github.com/ckpack/fetch-helper/compare/v0.0.2...v0.0.3) (2022-01-21)
 
 
