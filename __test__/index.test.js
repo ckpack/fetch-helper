@@ -12,24 +12,12 @@ describe('FetchHelper', () => {
   test('FetchHelper: interceptors', async () => {
     const fetchHelper = FetchHelper.create({
       interceptors: {
-        response: [(response, config) => {
+        response: [(response, ctx) => {
           return response.json();
         }]
       }
     });
     const res = await fetchHelper('https://jsonplaceholder.typicode.com/posts/1');
     expect(res.constructor.name).toEqual('Object');
-  });
-
-  test('FetchHelper: timeout', async () => {
-    const fetchHelper = FetchHelper.create({
-      timeout: 1,
-    });
-
-    try {
-      await fetchHelper('https://jsonplaceholder.typicode.com/posts/1');
-    } catch (error) {
-      expect(`${error}`).toEqual('Error: Timeout(1ms): Fetch https://jsonplaceholder.typicode.com/posts/1');
-    }
   });
 });

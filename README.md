@@ -1,28 +1,62 @@
 # fetch-helper
 
-`fetch-helper`是对 [fetch](https://developer.mozilla.org/zh-CN/docs/Web/API/fetch) API的简单封装, 所以只支持在浏览器中使用，如果需要在node环境中使用，请添加`fetch-node`依赖。
+<h4 align="center">
+  <a href="/README-ZH.md">中文</a>
+  |
+  <a href="/README.md">ENGLISH</a>
+</h4>
 
-```js
+`fetch-helper` is a lightweight wrapper for the [fetch](https://developer.mozilla.org/zh-CN/docs/Web/API/fetch) API, only supported in browsers, if needed For use in node environment, please add `fetch-node` global dependency.
+
+````js
 import fetch from 'node-fetch';
 globalThis.fetch = fetch;
-```
+````
 
-## 参数
+>If you are using a node version greater than `v17.5.0`, you can enable the `fetch` API directly with the --experimental-fetch CLI flag
 
-> Promise<Response> fetch(input[, Fetchinit]);
+## parameters
 
-`fetch-helper`除了支持原生[fetch](https://developer.mozilla.org/zh-CN/docs/Web/API/fetch)的所有配置项参数还添加了以下参数
+> Promise<Response> fetchHelper(input[, init]);
 
-+ `timeout`: `timeout?: number`,超时时间（单位毫秒），默认不设置超时时间
-+ `interceptors`: ``, 请求拦截器，该参数包含两个属性
-  + `request`: `(fetchConfig: FetchConfig) => FetchConfig []`, 请求触发前触发，你可以用来修改请求参数
-  + `response`: `(response: Response, fetchConfig: FetchConfig) => unknown []`, 请求触发后触发，你可以用来修改返回结果
++ `input`: the requested url or [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object
++ `init`: a configuration item object, including all the settings for the request, except all the configuration items that support native [fetch](https://developer.mozilla.org/zh-CN/docs/Web/API/fetch) Parameters also added the following parameters
+  + `interceptors`: request interceptors, this parameter contains two attributes
+    + `request`: contains an array of type `(init, ctx) => init`, triggered before the request is triggered, you can modify the request parameters by returning a new configuration item object
+    + `response`: contains an array of type `(response, ctx) => response`, triggered after the request is triggered, you can use it to modify the returned `response`
 
-如下面是一个获取修改`headers`,并将返回结果转为`json`的例子
+>`ctx` is the context of the current request instance, through which you can get or modify the current request's `input`, `init` and other instance parameters
 
-```js
-const fetchHelper = FetchHelper(`some url`, {
-  // fetch配置项所有可选的参数
+## return value
+
+A [`Response`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) [`Response`](https://developer.mozilla.org/ en-US/docs/Web/API/Response) object.
+
+## method
+
+### create(init])
+
+You can use the `create` method to create an instance with a default config object
+
+````js
+fetchHelper.create({
+  method: 'GET',
+  mode: 'cors',
+  interceptors: {
+    response: [(response, config) => {
+      return response.json();
+    }]
+  }
+});
+
+fetchInstance(`some url`);
+````
+
+## example
+
+### Set request `header`
+
+````js
+fetchHelper(`some url`, {
   interceptors: {
     request: [(config) => {
       config.headers = new Headers({
@@ -30,35 +64,55 @@ const fetchHelper = FetchHelper(`some url`, {
       });
       return config;
     }],
-    response: [(response, config) => {
-      return response.json();
-    }]
   }
 });
-```
+````
 
-## 返回值
+### Convert the returned result to `json`
 
-异步返回一个 [Response](https://developer.mozilla.org/zh-CN/docs/Web/API/Response) 对象。
-
-## 其他
-
-你可以使用`create`方法创建一个自定义配置的新实例。
-
-```js
-const featch = FetchHelper.create({
+````js
+fetchHelper(`some url`, {
   interceptors: {
-    request: [(config) => {
-      config.headers = new Headers({
-        'Authorization': localStorage.getItem('token')
-      });
-      return config;
-    }],
-    response: [(response, config) => {
+    response: [(response) => {
       return response.json();
     }]
   }
 });
+````
 
-featch(`some url`);
-```
+### Custom `timeout`
+
+````js
+const fetchInstance = fetchHelper.create({
+    interceptors: {
+      request: [(config)=>{
+        if(config.timeout){
+          const controller = new AbortController();
+          config.signal = controller.signal;
+          setTimeout(()=> {controller.abort()}, config.timeout)
+        }
+        return config;
+      }],
+    }
+});
+
+fetchInstance('some url', {
+  timeout: 6000,
+});
+````
+
+### custom `baseURL`
+
+````js
+const fetchInstance = fetchHelper.create({
+    baseURL: 'http://some.url',
+    interceptors: {
+      request: [(config, ctx)=>{
+        ctx.input = `${config.baseURL}${ctx.input}`;
+        return config;
+      }],
+    }
+});
+
+fetchInstance('/sub-url');
+````

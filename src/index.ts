@@ -1,13 +1,13 @@
-import type { FetchConfig } from './fetch-helper';
+import type { FetchHelperInit } from './fetch-helper';
 import { FetchHelper } from './fetch-helper';
 
-function createInstance(defaultConfig?: FetchConfig) {
+function createInstance(defaultConfig?: FetchHelperInit) {
   const context = new FetchHelper(defaultConfig);
   const instance:typeof context.request & {
     create?: typeof createInstance
   } = context.request.bind(context);
 
-  instance.create = (createConfig?: FetchConfig) => createInstance({
+  instance.create = (createConfig?: FetchHelperInit) => createInstance({
     ...defaultConfig,
     ...createConfig,
   });

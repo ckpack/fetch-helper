@@ -1,35 +1,30 @@
 import type { RequestMiddleware, ResponseMiddleware } from './compose';
 import { compose } from './compose';
 
-export interface FetchConfig extends RequestInit {
+export interface FetchHelperInit extends RequestInit {
   interceptors?: {
     request?: RequestMiddleware[],
     response?: ResponseMiddleware[],
-  },
-  timeout?: number,
+  };
+  [index: string]: any;
 }
 
 export class FetchHelper {
-  defaults: FetchConfig | undefined;
+  baseInit?: FetchHelperInit;
 
-  constructor(fetchConfig?: FetchConfig) {
-    this.defaults = fetchConfig;
+  input?: RequestInfo;
+
+  init?: FetchHelperInit;
+
+  constructor(fetchConfig?: FetchHelperInit) {
+    this.baseInit = fetchConfig;
   }
 
-  async request(fetchInput: RequestInfo, fetchInit?: FetchConfig) :Promise<Response> {
-    return new Promise(async (resolve, reject) => {
-      const mergeFetchInit = { ...this.defaults, ...fetchInit };
-      const composeFetchInit = await compose(mergeFetchInit?.interceptors?.request)(mergeFetchInit);
-      let timeOut!: ReturnType<typeof setTimeout>;
-      if (composeFetchInit.timeout) {
-        timeOut = setTimeout(() => {
-          clearTimeout(timeOut);
-          reject(new Error(`Timeout(${composeFetchInit.timeout}ms): Fetch ${fetchInput}`));
-        }, composeFetchInit.timeout);
-      }
-      const response = await fetch(fetchInput, composeFetchInit);
-      clearTimeout(timeOut);
-      resolve(await compose(composeFetchInit?.interceptors?.response)(response, composeFetchInit));
-    });
+  async request(input: RequestInfo, init?: FetchHelperInit) :Promise<Response> {
+    const mergeInit = { ...this.baseInit, ...init };
+    this.input = input;
+    this.init = await compose(this, mergeInit?.interceptors?.request)(mergeInit);
+    const response = await fetch(this.input, this.init);
+    return compose(this, this.init?.interceptors?.response)(response);
   }
 }

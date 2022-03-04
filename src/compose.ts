@@ -1,12 +1,12 @@
-import type { FetchConfig } from './fetch-helper';
+import type { FetchHelperInit, FetchHelper } from './fetch-helper';
 
-export type RequestMiddleware = (fetchConfig:FetchConfig) => FetchConfig;
-export type ResponseMiddleware = (response: Response, fetchConfig:FetchConfig) => unknown;
+export type RequestMiddleware = (init:FetchHelperInit, ctx : FetchHelper) => FetchHelperInit | unknown;
+export type ResponseMiddleware = (response: Response, ctx : FetchHelper) => Response | unknown;
 
-export function compose(middleware:any = []) {
-  return <T>(params:T, params2?: any): T => {
-    return middleware.reduce(async (previousValue: T, currentValue: any) => {
-      return currentValue(await previousValue, params2);
-    }, params);
+export function compose(ctx : FetchHelper, middleware?: any[]) {
+  return <T>(params:T): T => {
+    return Array.isArray(middleware) ? middleware.reduce(async (previousValue: T, currentValue: any) => {
+      return currentValue(await previousValue, ctx);
+    }, params) : params;
   };
 }
