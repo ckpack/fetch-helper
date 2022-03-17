@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/ckpack/fetch-helper/compare/v0.0.6...v0.0.7) (2022-03-17)
+
+
+### Features
+
+* add baseURL、params、paramsSerializer、transformRequest、transformResponse、adapter ([e56711f](https://github.com/ckpack/fetch-helper/commit/e56711fd9c003ba94078b1d208ca86b381864bbc))
+
 ### [0.0.6](https://github.com/ckpack/fetch-helper/compare/v0.0.5...v0.0.6) (2022-03-04)
 
 
