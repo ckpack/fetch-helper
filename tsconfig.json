@@ -1,22 +1,26 @@
 {
-    "compilerOptions": {
-      "outDir": "es",
-      "declaration": true,
-      "removeComments": true,
-      "noImplicitAny": true,
-      "target": "esnext",
-      "useDefineForClassFields": true,
-      "module": "ESNext",
-      "strict": true,
-      "allowJs": true,
-      "sourceMap": false,
-      "esModuleInterop": true,
-      "isolatedModules": true,
-      "skipLibCheck": true,
-      "lib": ["ESNext", "DOM"],
-      "rootDir": "./src",
-      "baseUrl": "./",
-    },
-    "include": ["src/**/*", "__test/**/*"],
-    "exclude": ["node_modules"]
-  }
+  "compilerOptions": {
+    "declaration": true,
+    "target": "ESNext",
+    "outDir": "esm",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "skipLibCheck": true,
+    "importsNotUsedAsValues": "error",
+    "noImplicitThis": true,
+    "allowJs": false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "lib": [
+      "ESNext",
+      "DOM",
+    ],
+    "types": ["node"],
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
