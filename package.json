@@ -8,8 +8,8 @@
   "author": "chenkai",
   "license": "MIT",
   "type": "module",
-  "types": "",
-  "main": "./esm/index.d.ts",
+  "types": "./esm/index.d.ts",
+  "main": "./esm/index.js",
   "exports": {
     ".": "./esm/index.js",
     "./*": "./*"
@@ -22,25 +22,28 @@
     "coverage": "vitest run --coverage",
     "release": "standard-version",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "tsc": "pnpm tsc",
-    "build": "tsc",
-    "docs": "typedoc src/index.ts"
+    "build": "tsc && npm run build:min",
+    "build:min": "rm -rf ./dist/* && npm run build:min:esm && npm run build:min:cjs && npm run build:min:iife",
+    "build:min:esm": "esbuild ./src/index.ts --bundle --minify --format=esm --outfile=./dist/index.mjs",
+    "build:min:cjs": "esbuild ./src/index.ts --bundle --minify --format=cjs --outfile=./dist/index.cjs",
+    "build:min:iife": "esbuild ./src/index.ts --bundle --minify --format=iife --global-name=fetchHelper --outfile=./dist/index.js --footer:js=\"fetchHelper = fetchHelper.default;\""
   },
   "files": [
     "src",
-    "esm"
+    "esm",
+    "dist"
   ],
   "devDependencies": {
     "husky": "^8.0.1",
     "standard-version": "^9.5.0",
     "lint-staged": "^13.0.3",
-    "@antfu/eslint-config": "0.26.1",
-    "@types/node": "18.7.6",
-    "eslint": "^8.22.0",
-    "typescript": "^4.7.4",
+    "eslint": "^8.23.0",
+    "@antfu/eslint-config": "0.26.2",
+    "@types/node": "18.7.13",
+    "typescript": "^4.8.2",
     "vitest": "0.22.1",
     "@vitest/coverage-c8": "0.22.1",
-    "typedoc": "0.23.10"
+    "esbuild": "0.15.5"
   },
   "lint-staged": {
     "*.{js,ts,mjs,cjs,tsx,jsx,vue}": [

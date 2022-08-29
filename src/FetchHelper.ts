@@ -50,7 +50,7 @@ export class FetchHelper {
     this.defaultInit = fetchConfig || {}
   }
 
-  async request(input: FetchHelperInput, init?: FetchHelperInit): Promise<Response> {
+  async request(input: FetchHelperInput, init?: FetchHelperInit) {
     this.input = input
     const mergeInit: FetchHelperInit = { ...this.defaultInit, ...init, headers: mergeHeaders(this.defaultInit?.headers, init?.headers) }
 
