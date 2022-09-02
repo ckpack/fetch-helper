@@ -4,6 +4,14 @@ export type TransformResponse = (response: Response, ctx: FetchHelper) => Promis
 
 const paramsSerializer = (params?: RequestParams) => new URLSearchParams(params).toString()
 
+export const mergeHeaders = (header?: HeadersInit, header2?: HeadersInit) => {
+  const base = new Headers(header)
+  new Headers(header2).forEach((value, key) => {
+    base.set(key, value)
+  })
+  return base
+}
+
 export const WITHOUT_BODY_METHODS = ['GET', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'] as const
 export const WITH_BODY_METHODS = ['DELETE', 'PATCH', 'POST', 'PUT'] as const
 
@@ -19,26 +27,6 @@ export interface FetchHelperInit extends RequestInit {
   transformResponse?: TransformResponse
   adapter?: (input?: RequestInfo | URL, init?: RequestInit) => Response
   [index: string]: any
-}
-
-const mergeHeaders = (header?: HeadersInit, header2?: HeadersInit) => {
-  const base = new Headers(header)
-  new Headers(header2).forEach((value, key) => {
-    base.set(key, value)
-  })
-  return base
-}
-
-export const defaultTransformRequest: TransformRequest = (init) => {
-  const body = init.body
-  if (!body || body.constructor.name !== 'Object')
-    return init
-
-  init.headers = mergeHeaders(init.headers, {
-    'Content-type': 'application/json',
-  })
-  init.body = JSON.stringify(body)
-  return init
 }
 
 export class FetchHelper {

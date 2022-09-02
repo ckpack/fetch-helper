@@ -1,19 +1,23 @@
 import { describe, expect, test } from 'vitest'
-import { FetchHelper, defaultTransformRequest } from '../src/FetchHelper'
+import { FetchHelper } from '../src/FetchHelper'
+import { baseURL } from './config'
 
 const fetchHelper = new FetchHelper({
-  transformRequest: defaultTransformRequest,
+  baseURL,
 })
 describe('FetchHelper', () => {
   test('request', async () => {
-    const res = await fetchHelper.request('https://jsonplaceholder.typicode.com/comments?id=1')
+    const res = await fetchHelper.request('/comments?id=1')
     expect((await res.json())[0].id).toEqual(1)
   })
 
   test('request - post', async () => {
-    const res = await fetchHelper.request('https://jsonplaceholder.typicode.com/posts', {
+    const res = await fetchHelper.request('/posts', {
       method: 'post',
-      body: { body: 'body', userId: 1 } as any,
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ body: 'body', userId: 1 }),
     })
     expect(await res.text()).contains('body')
   })

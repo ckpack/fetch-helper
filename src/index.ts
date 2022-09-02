@@ -1,12 +1,11 @@
 import type { FetchHelperInit, FetchHelperInput, RequestParams } from './FetchHelper.js'
-import { FetchHelper, WITHOUT_BODY_METHODS, WITH_BODY_METHODS, defaultTransformRequest } from './FetchHelper.js'
+import { FetchHelper, WITHOUT_BODY_METHODS, WITH_BODY_METHODS } from './FetchHelper.js'
+export * from './FetchHelper.js'
 
-const defaultConfig: FetchHelperInit = {
-  transformRequest: defaultTransformRequest,
-}
+const defaultConfig: FetchHelperInit = {}
 
-export type WithoutBodyMethod = (input: FetchHelperInput, params?: RequestParams | Object) => Promise<Response>
-export type WithBodyMethod = (input: FetchHelperInput, body?: BodyInit | Object) => Promise<Response>
+export type WithoutBodyMethod = (input: FetchHelperInput, params?: RequestParams | Object, options?: FetchHelperInit) => Promise<Response>
+export type WithBodyMethod = (input: FetchHelperInput, body?: BodyInit | Object, options?: FetchHelperInit) => Promise<Response>
 
 export const createInstance = (defaultConfig?: FetchHelperInit) => {
   const context = new FetchHelper(defaultConfig)
@@ -22,18 +21,22 @@ export const createInstance = (defaultConfig?: FetchHelperInit) => {
     patch: WithBodyMethod
     post: WithBodyMethod
     put: WithBodyMethod
+    default: FetchHelperInit
   }
+
+  instance.default = defaultConfig || {}
 
   instance.create = (createConfig?: FetchHelperInit) => createInstance({
     ...defaultConfig,
+    ...instance.default,
     ...createConfig,
   })
 
   WITHOUT_BODY_METHODS.map(val => val.toLowerCase() as Lowercase<typeof val>).forEach((value) => {
-    instance[value] = (input, params) => instance(input, { ...defaultConfig, params, method: value })
+    instance[value] = (input, params, options) => instance(input, { ...defaultConfig, params, method: value, ...options })
   })
   WITH_BODY_METHODS.map(val => val.toLowerCase() as Lowercase<typeof val>).forEach((value) => {
-    instance[value] = (input, body: any) => instance(input, { ...defaultConfig, body, method: value })
+    instance[value] = (input, body: any, options) => instance(input, { ...defaultConfig, body, method: value, ...options })
   })
 
   return instance

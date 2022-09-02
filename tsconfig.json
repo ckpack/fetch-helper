@@ -18,6 +18,7 @@
     "lib": [
       "ESNext",
       "DOM",
+      "DOM.Iterable"
     ],
     "types": ["node"],
   },
