@@ -2,9 +2,10 @@ import { describe, expect, test } from 'vitest'
 import FetchHelper from '../src/index'
 import { baseURL } from './config'
 
+FetchHelper.default.baseURL = baseURL
 describe('FetchHelper', () => {
   test('FetchHelper', async () => {
-    const res = await FetchHelper.get(`${baseURL}/comments?id=1`)
+    const res = await FetchHelper.get('/comments?id=1')
     expect((await res.json())[0].id).toEqual(1)
   })
   test('FetchHelper.create', async () => {
