@@ -49,15 +49,19 @@ fetchHelper('/comments', {
 
 ```js
 import fetchHelper from '@ckpack/fetch-helper';
+
 const fetchInstance = fetchHelper.create({
   method: 'GET',
   mode: 'cors',
-  transformResponse(response) {
-    return response.json();
-  },
+  baseURL: 'http://jsonplaceholder.typicode.com',
 });
 
-fetchInstance(`some url`);
+// 等于 fetch('http://jsonplaceholder.typicode.com/comments?id=1')
+fetchInstance(`/comments`, {
+  params: {
+    id: 1,
+  },
+});
 ```
 
 ## 例子

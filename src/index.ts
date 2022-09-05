@@ -42,4 +42,5 @@ export const createInstance = (defaultConfig?: FetchHelperInit) => {
   return instance
 }
 
-export default createInstance(defaultConfig)
+const instance = createInstance(defaultConfig)
+export default instance
