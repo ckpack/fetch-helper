@@ -38,7 +38,7 @@ describe('FetchHelper', () => {
         return response[ctx?.init?.responseType]()
       },
     })
-    const res = await fetchHelper(`${baseURL}/comments?id=1`, {
+    const res = await fetchHelper<{ id: number }[]>(`${baseURL}/comments?id=1`, {
       responseType: 'json',
     })
     expect(res[0].id).toEqual(1)

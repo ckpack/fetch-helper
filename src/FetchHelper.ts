@@ -1,6 +1,6 @@
-export type RequestParams = URLSearchParams | Record<string, any> | undefined
+export type RequestParams = URLSearchParams | Record<string | number, any> | undefined
 export type TransformRequest = (init: FetchHelperInit, ctx: FetchHelper) => Promise<FetchHelperInit> | FetchHelperInit
-export type TransformResponse = (response: Response, ctx: FetchHelper) => Promise<Response> | Response
+export type TransformResponse = (response: Response, ctx: FetchHelper) => Promise<unknown>
 
 const paramsSerializer = (params?: RequestParams) => new URLSearchParams(params).toString()
 
@@ -18,6 +18,7 @@ export const WITH_BODY_METHODS = ['DELETE', 'PATCH', 'POST', 'PUT'] as const
 export type RequestMethod = typeof WITHOUT_BODY_METHODS[number] | typeof WITH_BODY_METHODS[number] | Lowercase<typeof WITHOUT_BODY_METHODS[number]> | Lowercase<typeof WITH_BODY_METHODS[number]>
 
 export type FetchHelperInput = RequestInfo
+
 export interface FetchHelperInit extends RequestInit {
   baseURL?: string
   method?: RequestMethod
@@ -38,7 +39,7 @@ export class FetchHelper {
     this.defaultInit = fetchConfig || {}
   }
 
-  async request(input: FetchHelperInput, init?: FetchHelperInit) {
+  async request<T = Response>(input: FetchHelperInput, init?: FetchHelperInit): Promise<T> {
     this.input = input
     const mergeInit: FetchHelperInit = { ...this.defaultInit, ...init, headers: mergeHeaders(this.defaultInit?.headers, init?.headers) }
 
@@ -56,6 +57,6 @@ export class FetchHelper {
     }
 
     const response = await (this.init.adapter || fetch)(this.input, this.init)
-    return mergeInit.transformResponse ? mergeInit.transformResponse(response, this) : response
+    return mergeInit.transformResponse ? mergeInit.transformResponse(response, this) : response as any
   }
 }
