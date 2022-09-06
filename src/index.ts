@@ -6,12 +6,16 @@ const defaultConfig: FetchHelperInit = {}
 
 export type WithoutBodyMethod = <T=Response>(input: FetchHelperInput, params?: RequestParams | Object, options?: FetchHelperInit) => Promise<T>
 export type WithBodyMethod = <T=Response>(input: FetchHelperInput, body?: BodyInit | Object, options?: FetchHelperInit) => Promise<T>
+export type InputBodyMethod = <T=Response>(options: FetchHelperInit & {
+  input: FetchHelperInput
+}) => Promise<T>
 
 export const createInstance = (defaultConfig?: FetchHelperInit) => {
   const context = new FetchHelper(defaultConfig)
 
   const instance = context.request.bind(context) as typeof context.request & {
     create: typeof createInstance
+    request: InputBodyMethod
     get: WithoutBodyMethod
     head: WithoutBodyMethod
     options: WithoutBodyMethod
@@ -38,6 +42,7 @@ export const createInstance = (defaultConfig?: FetchHelperInit) => {
   WITH_BODY_METHODS.map(val => val.toLowerCase() as Lowercase<typeof val>).forEach((value) => {
     instance[value] = (input, body: any, options) => instance(input, { ...defaultConfig, body, method: value, ...options })
   })
+  instance.request = options => instance(options.input, { ...defaultConfig, ...options })
 
   return instance
 }
