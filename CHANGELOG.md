@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2](https://github.com/ckpack/lib/compare/v0.0.7...v0.0.2) (2022-09-06)
+
+
+### Features
+
+* 优化 ([e5b74e6](https://github.com/ckpack/lib/commit/e5b74e610a7588a5a951a9968f19f0dfc534a30a))
+* 优化类型提示已经打包工具 ([9c5c5d9](https://github.com/ckpack/lib/commit/9c5c5d9b2fc8bb0a4b3f7ef0e19b9c80e32c0a8f))
+* 保存 ([ceb8f55](https://github.com/ckpack/lib/commit/ceb8f5523a666a6b46f8c7539f2d011cf4978308))
+* 添加esbuild ([16cc0a8](https://github.com/ckpack/lib/commit/16cc0a87796f9fe28a4f3be94b16515e2305e197))
+
+
+### Bug Fixes
+
+* 优化类型 ([496ab7f](https://github.com/ckpack/lib/commit/496ab7ffcd1edb1e93eb5f56f8c75ab4cbb89928))
+
 ### [0.0.7](https://github.com/ckpack/fetch-helper/compare/v0.0.6...v0.0.7) (2022-03-17)
 
 
