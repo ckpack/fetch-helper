@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/ckpack/fetch-helper/compare/v0.1.1...v0.1.2) (2022-09-06)
+
+
+### Bug Fixes
+
+* 更新repository地址 ([9edf9bc](https://github.com/ckpack/fetch-helper/commit/9edf9bc404ae9bbb7def525dbbdf26e19936ebc1))
+
 ### [0.1.1](https://github.com/ckpack/lib/compare/v0.0.7...v0.1.1) (2022-09-06)
 
 
