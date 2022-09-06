@@ -4,7 +4,7 @@
   "version": "0.1.1",
   "description": "一个轻量级的工具函数库",
   "sideEffects": false,
-  "repository": "https://github.com/ckpack/lib",
+  "repository": "https://github.com/ckpack/fetch-helper",
   "author": "chenkai",
   "license": "MIT",
   "type": "module",
