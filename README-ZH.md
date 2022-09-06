@@ -24,7 +24,7 @@
 返回一个 [`Promise`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise) 对象，默认是[`Response`](https://developer.mozilla.org/zh-CN/docs/Web/API/Response)类型，也可以通过`transformResponse`返回其他类型
 
 ```js
-import fetchHelper from '@ckpack/fetch-helper';
+import fetchHelper from '@ckpack/fetch-helper'
 
 // 等于 fetch('http://jsonplaceholder.typicode.com/comments?id=1')
 fetchHelper('/comments', {
@@ -32,7 +32,7 @@ fetchHelper('/comments', {
   params: {
     id: 1,
   },
-});
+})
 ```
 
 ### fetchHelper.create
@@ -42,7 +42,7 @@ fetchHelper('/comments', {
 const instance = fetchHelper.create({
   // 你也可以在此处设置其他参数
   baseURL: 'http://jsonplaceholder.typicode.com',
-});
+})
 ```
 ### fetchHelper.default
 
@@ -78,37 +78,37 @@ fetchHelper.patch(url, body?, config?)
 
 
 ```js
-import fetchHelper from '@ckpack/fetch-helper';
+import fetchHelper from '@ckpack/fetch-helper'
 
 const instance = fetchHelper.create({
   // 你也可以在此处设置其他参数
   baseURL: 'http://jsonplaceholder.typicode.com',
-});
+})
 
 // fetch('http://jsonplaceholder.typicode.com/comments?id=1')
-instance(`/comments`, {
+instance('/comments', {
   params: {
     id: 1,
   },
-});
+})
 
 // 通过default属性永久修改配置
 // fetch('http://localhost:3000/comments?id=1')
 instance.default.baseURL = 'http://localhost:3000'
-instance(`/comments`, {
+instance('/comments', {
   params: {
     id: 1,
   },
-});
+})
 
 // 通过参数临时修改配置
 // fetch('http://localhost:3000/comments?id=1')
-await instance(`/comments`, {
+await instance('/comments', {
   baseURL: 'http://localhost:3000',
   params: {
     id: 1,
   },
-});
+})
 ```
 
 ### 设置请求`method`
@@ -121,14 +121,14 @@ await fetchHelper('http://jsonplaceholder.typicode.com/posts', {
     'Content-type': 'application/json',
   },
   body: JSON.stringify({ firstName: 'Fred', lastName: 'Flintstone' }),
-});
+})
 
 // 或者
 await fetchHelper.post('http://jsonplaceholder.typicode.com/posts', JSON.stringify({ firstName: 'Fred', lastName: 'Flintstone' }), {
   headers: {
     'Content-type': 'application/json',
   },
-});
+})
 ```
 ### params
 
@@ -140,9 +140,9 @@ fetchHelper('/comments', {
   params: {
     limit: 10,
     page: 2,
-    ids: [1,2,3] // ids=1,2,3
+    ids: [1, 2, 3] // ids=1,2,3
   },
-});
+})
 ```
 
 ### paramsSerializer
@@ -168,38 +168,38 @@ fetchHelper('/comments', {
 ```js
 const resuest = fetchHelper.create({
   baseURL: 'http://jsonplaceholder.typicode.com',
-  transformRequest(init){
-    const { body } = init;
-    if(typeof body === 'object' && !(body instanceof FormData || body instanceof URLSearchParams)) {
+  transformRequest(init) {
+    const { body } = init
+    if (typeof body === 'object' && !(body instanceof FormData || body instanceof URLSearchParams)) {
       const headers = new Headers(init.headers)
       headers.set('Content-type', 'application/json')
       init.headers = headers
       init.body = JSON.stringify(body)
     }
-    return init;
+    return init
   },
-});
+})
 
 const res = await resuest.post('/posts', { firstName: 'Fred', lastName: 'Flintstone' })
 ```
 ### 通过`transformResponse`转换请求结果
 
 ```js
-const fetchHelper = fetchHelper(`http://jsonplaceholder.typicode.com/comments`, {
+const fetchHelper = fetchHelper('http://jsonplaceholder.typicode.com/comments', {
   transformResponse(response) {
-    return response.json();
+    return response.json()
   },
-});
+})
 // 请求结果会被转为json
 ```
 
 ```ts
 // 如果使用了TypeScript可以指定泛型类型
-const fetchHelper = fetchHelper<{id: number}[]>(`http://jsonplaceholder.typicode.com/comments`, {
+const fetchHelper = fetchHelper<{ id: number }[]>('http://jsonplaceholder.typicode.com/comments', {
   transformResponse(response) {
-    return response.json();
+    return response.json()
   },
-});
+})
 // fetchHelper[0].id
 ```
 ### 设置请求`timeout`
@@ -207,33 +207,33 @@ const fetchHelper = fetchHelper<{id: number}[]>(`http://jsonplaceholder.typicode
 ```js
 const instance = fetchHelper.create({
   transformRequest(config) {
-    if(config.timeout){
-      const controller = new AbortController();
-      config.signal = controller.signal;
-      setTimeout(()=> controller.abort('timeout'), config.timeout)
+    if (config.timeout) {
+      const controller = new AbortController()
+      config.signal = controller.signal
+      setTimeout(() => controller.abort('timeout'), config.timeout)
     }
-    return config;
+    return config
   },
-});
+})
 
 await instance('http://jsonplaceholder.typicode.com/comments', {
   timeout: 6000,
-});
+})
 // 六秒后自动取消请求
 ```
 
 ### 自定义`adapter`
 
 ```js
-const fetchResponse = await fetchHelper(`http://jsonplaceholder.typicode.com/comments`, {
+const fetchResponse = await fetchHelper('http://jsonplaceholder.typicode.com/comments', {
   params: {
     limit: 1,
     page: 2
   },
-  adapter(input){
-    return new Response(`${input}`);
+  adapter(input) {
+    return new Response(`${input}`)
   },
-});
+})
 
 console.log(await fetchResponse.text())
 // 不经过fetch直接返回结果: http://jsonplaceholder.typicode.com/comments?limit=1&page=2

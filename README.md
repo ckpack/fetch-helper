@@ -1,7 +1,7 @@
 # @ckpack/fetch-helper
 
 <h4 align="center">
-  <a href="/README-EN.md">Chinese</a>
+  <a href="/README-ZH.md">中文</a>
   |
   <a href="/README.md">ENGLISH</a>
 </h4>
@@ -24,7 +24,7 @@
 Returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object, the default is [`Response`](https://developer. mozilla.org/en-US/docs/Web/API/Response) type, other types can also be returned through `transformResponse`
 
 ```js
-import fetchHelper from '@ckpack/fetch-helper';
+import fetchHelper from '@ckpack/fetch-helper'
 
 // equal to fetch('http://jsonplaceholder.typicode.com/comments?id=1')
 fetchHelper('/comments', {
@@ -32,7 +32,7 @@ fetchHelper('/comments', {
   params: {
     id: 1,
   },
-});
+})
 ```
 
 ### fetchHelper.create
@@ -43,7 +43,7 @@ Create a new `fetchHelper` instance with custom configuration.
 const instance = fetchHelper.create({
   // You can also set other parameters here
   baseURL: 'http://jsonplaceholder.typicode.com',
-});
+})
 ```
 ### fetchHelper.default
 
@@ -79,37 +79,37 @@ You can use the `create` method to create an instance with a default config obje
 
 
 ```js
-import fetchHelper from '@ckpack/fetch-helper';
+import fetchHelper from '@ckpack/fetch-helper'
 
 const instance = fetchHelper.create({
   // You can also set other parameters here
   baseURL: 'http://jsonplaceholder.typicode.com',
-});
+})
 
 // fetch('http://jsonplaceholder.typicode.com/comments?id=1')
-instance(`/comments`, {
+instance('/comments', {
   params: {
     id: 1,
   },
-});
+})
 
 // Permanently modify the configuration via the default property
 // fetch('http://localhost:3000/comments?id=1')
 instance.default.baseURL = 'http://localhost:3000'
-instance(`/comments`, {
+instance('/comments', {
   params: {
     id: 1,
   },
-});
+})
 
 // Temporarily modify the configuration by parameters
 // fetch('http://localhost:3000/comments?id=1')
-await instance(`/comments`, {
+await instance('/comments', {
   baseURL: 'http://localhost:3000',
   params: {
     id: 1,
   },
-});
+})
 ```
 
 ### set request `method`
@@ -122,14 +122,14 @@ await fetchHelper('http://jsonplaceholder.typicode.com/posts', {
     'Content-type': 'application/json',
   },
   body: JSON.stringify({ firstName: 'Fred', lastName: 'Flintstone' }),
-});
+})
 
 // or
 await fetchHelper.post('http://jsonplaceholder.typicode.com/posts', JSON.stringify({ firstName: 'Fred', lastName: 'Flintstone' }), {
   headers: {
     'Content-type': 'application/json',
   },
-});
+})
 ```
 ### set query string params
 
@@ -141,9 +141,9 @@ fetchHelper('/comments', {
   params: {
     limit: 10,
     page: 2,
-    ids: [1,2,3] // ids=1,2,3
+    ids: [1, 2, 3] // ids=1,2,3
   },
-});
+})
 ```
 ### paramsSerializer
 
@@ -159,7 +159,7 @@ fetchHelper('/comments', {
     ids: [1,2,3] // ids[]=1&ids[]=2&ids[]=3
   },
   paramsSerializer: (params) => Qs.stringify(params, {arrayFormat: 'brackets'},
-});
+})
 ```
 
 ### transformRequest
@@ -168,38 +168,38 @@ The request parameter configuration can be changed through `transformRequest`. B
 ```js
 const resuest = fetchHelper.create({
   baseURL: 'http://jsonplaceholder.typicode.com',
-  transformRequest(init){
-    const { body } = init;
-    if(typeof body === 'object' && !(body instanceof FormData || body instanceof URLSearchParams)) {
+  transformRequest(init) {
+    const { body } = init
+    if (typeof body === 'object' && !(body instanceof FormData || body instanceof URLSearchParams)) {
       const headers = new Headers(init.headers)
       headers.set('Content-type', 'application/json')
       init.headers = headers
       init.body = JSON.stringify(body)
     }
-    return init;
+    return init
   },
-});
+})
 
 const res = await resuest.post('/posts', { firstName: 'Fred', lastName: 'Flintstone' })
 ```
 ### Transform the request result via `transformResponse`
 
 ```js
-const fetchHelper = fetchHelper(`http://jsonplaceholder.typicode.com/comments`, {
+const fetchHelper = fetchHelper('http://jsonplaceholder.typicode.com/comments', {
   transformResponse(response) {
-    return response.json();
+    return response.json()
   },
-});
+})
 // The request result will be converted to json
 ```
 
 ```ts
 // If TypeScript is used, generic types can be specified
-const fetchHelper = fetchHelper<{id: number}[]>(`http://jsonplaceholder.typicode.com/comments`, {
+const fetchHelper = fetchHelper<{ id: number }[]>('http://jsonplaceholder.typicode.com/comments', {
   transformResponse(response) {
-    return response.json();
+    return response.json()
   },
-});
+})
 // fetchHelper[0].id
 ```
 
@@ -208,33 +208,33 @@ const fetchHelper = fetchHelper<{id: number}[]>(`http://jsonplaceholder.typicode
 ```js
 const instance = fetchHelper.create({
   transformRequest(config) {
-    if(config.timeout){
-      const controller = new AbortController();
-      config.signal = controller.signal;
-      setTimeout(()=> controller.abort('timeout'), config.timeout)
+    if (config.timeout) {
+      const controller = new AbortController()
+      config.signal = controller.signal
+      setTimeout(() => controller.abort('timeout'), config.timeout)
     }
-    return config;
+    return config
   },
-});
+})
 
 await instance('http://jsonplaceholder.typicode.com/comments', {
   timeout: 6000,
-});
+})
 // automatically cancel the request after six seconds
 ```
 
 ### Custom `adapter`
 
 ```js
-const fetchResponse = await fetchHelper(`http://jsonplaceholder.typicode.com/comments`, {
+const fetchResponse = await fetchHelper('http://jsonplaceholder.typicode.com/comments', {
   params: {
     limit: 1,
     page: 2
   },
-  adapter(input){
-    return new Response(`${input}`);
+  adapter(input) {
+    return new Response(`${input}`)
   },
-});
+})
 
 console.log(await fetchResponse.text())
 // Return the result directly without fetching: http://jsonplaceholder.typicode.com/comments?limit=1&page=2
