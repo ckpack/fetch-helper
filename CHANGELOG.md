@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/ckpack/fetch-helper/compare/v0.1.3...v0.1.4) (2022-09-09)
+
+
+### Features
+
+* type ([b16c4a9](https://github.com/ckpack/fetch-helper/commit/b16c4a91aeb21ace938717f073293981d9ef0a04))
+
 ### [0.1.3](https://github.com/ckpack/fetch-helper/compare/v0.1.2...v0.1.3) (2022-09-09)
 
 
