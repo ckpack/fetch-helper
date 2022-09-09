@@ -27,8 +27,8 @@ export interface FetchHelperInit extends RequestInit {
   transformRequest?: TransformRequest
   transformResponse?: TransformResponse
   adapter?: (input?: RequestInfo | URL, init?: RequestInit) => Response
-  handlerError?: (error: any) => undefined
-  handlerSuccess?: (response: Response) => undefined
+  handlerError?: (error?: any) => void
+  handlerSuccess?: (response?: Response) => void
   [index: string]: any
 }
 
