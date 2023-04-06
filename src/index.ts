@@ -1,16 +1,17 @@
 import type { FetchHelperInit, FetchHelperInput, RequestParams } from './FetchHelper.js';
 import { FetchHelper, WITHOUT_BODY_METHODS, WITH_BODY_METHODS } from './FetchHelper.js';
+
 export * from './FetchHelper.js';
 
 const defaultConfig: FetchHelperInit = {};
 
-export type WithoutBodyMethod = <T=Response>(input: FetchHelperInput, params?: RequestParams | Object, options?: FetchHelperInit) => Promise<T | undefined>;
-export type WithBodyMethod = <T=Response>(input: FetchHelperInput, body?: BodyInit | Object, options?: FetchHelperInit) => Promise<T | undefined>;
-export type InputBodyMethod = <T=Response>(options: FetchHelperInit & {
+export type WithoutBodyMethod = <T = Response>(input: FetchHelperInput, params?: RequestParams, options?: FetchHelperInit) => Promise<T | undefined>;
+export type WithBodyMethod = <T = Response>(input: FetchHelperInput, body?: BodyInit | Object, options?: FetchHelperInit) => Promise<T | undefined>;
+export type InputBodyMethod = <T = Response>(options: FetchHelperInit & {
   input: FetchHelperInput
 }) => Promise<T | undefined>;
 
-export const createInstance = (defaultConfig?: FetchHelperInit) => {
+export function createInstance(defaultConfig?: FetchHelperInit) {
   const context = new FetchHelper(defaultConfig);
 
   const instance = context.request.bind(context) as typeof context.request & {
@@ -45,7 +46,7 @@ export const createInstance = (defaultConfig?: FetchHelperInit) => {
   instance.request = options => instance(options.input, { ...defaultConfig, ...options });
 
   return instance;
-};
+}
 
 const instance = createInstance(defaultConfig);
 export default instance;
