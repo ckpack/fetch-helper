@@ -1,7 +1,7 @@
 {
   "name": "@ckpack/fetch-helper",
   "private": false,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "一个轻量级的工具函数库",
   "sideEffects": false,
   "repository": "https://github.com/ckpack/fetch-helper",
