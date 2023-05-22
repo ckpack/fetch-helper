@@ -5,45 +5,45 @@ export * from './FetchHelper.js';
 
 const defaultConfig: FetchHelperInit = {};
 
-export type WithoutBodyMethod = <T = Response>(input: FetchHelperInput, params?: RequestParams, options?: FetchHelperInit) => Promise<T | undefined>;
-export type WithBodyMethod = <T = Response>(input: FetchHelperInput, body?: BodyInit | Object, options?: FetchHelperInit) => Promise<T | undefined>;
-export type InputBodyMethod = <T = Response>(options: FetchHelperInit & {
+export type WithoutBodyMethod<T = Response> = (input: FetchHelperInput, params?: RequestParams, options?: FetchHelperInit) => Promise<T>;
+export type WithBodyMethod<T = Response> = (input: FetchHelperInput, body?: BodyInit | Object, options?: FetchHelperInit) => Promise<T>;
+export type InputBodyMethod<T = Response> = (options: FetchHelperInit & {
   input: FetchHelperInput
-}) => Promise<T | undefined>;
+}) => Promise<T>;
 
-export function createInstance(defaultConfig?: FetchHelperInit) {
+export function createInstance<T = Response>(defaultConfig?: FetchHelperInit) {
   const context = new FetchHelper(defaultConfig);
 
   const instance = context.request.bind(context) as typeof context.request & {
     create: typeof createInstance
-    request: InputBodyMethod
-    get: WithoutBodyMethod
-    head: WithoutBodyMethod
-    options: WithoutBodyMethod
-    connect: WithoutBodyMethod
-    trace: WithoutBodyMethod
-    delete: WithBodyMethod
-    patch: WithBodyMethod
-    post: WithBodyMethod
-    put: WithBodyMethod
+    request: InputBodyMethod<T>
+    get: WithoutBodyMethod<T>
+    head: WithoutBodyMethod<T>
+    options: WithoutBodyMethod<T>
+    connect: WithoutBodyMethod<T>
+    trace: WithoutBodyMethod<T>
+    delete: WithBodyMethod<T>
+    patch: WithBodyMethod<T>
+    post: WithBodyMethod<T>
+    put: WithBodyMethod<T>
     default: FetchHelperInit
   };
 
   instance.default = defaultConfig || {};
 
-  instance.create = (createConfig?: FetchHelperInit) => createInstance({
+  instance.create = (createConfig?: FetchHelperInit) => createInstance<T>({
     ...defaultConfig,
     ...instance.default,
     ...createConfig,
   });
 
   WITHOUT_BODY_METHODS.map(val => val.toLowerCase() as Lowercase<typeof val>).forEach((value) => {
-    instance[value] = (input, params, options) => instance(input, { ...defaultConfig, params, method: value, ...options });
+    instance[value] = (input, params, options) => instance<T>(input, { ...defaultConfig, params, method: value, ...options });
   });
   WITH_BODY_METHODS.map(val => val.toLowerCase() as Lowercase<typeof val>).forEach((value) => {
-    instance[value] = (input, body: any, options) => instance(input, { ...defaultConfig, body, method: value, ...options });
+    instance[value] = (input, body: any, options) => instance<T>(input, { ...defaultConfig, body, method: value, ...options });
   });
-  instance.request = options => instance(options.input, { ...defaultConfig, ...options });
+  instance.request = options => instance<T>(options.input, { ...defaultConfig, ...options });
 
   return instance;
 }

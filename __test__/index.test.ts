@@ -9,10 +9,10 @@ describe('FetchHelper', () => {
     expect((await res.json())[0].id).toEqual(1);
   });
   test('FetchHelper.create', async () => {
-    const fetchHelper = FetchHelper.create({
+    const fetchHelper = FetchHelper.create<string>({
       baseURL,
       transformResponse: (response) => {
-        return response.json();
+        return response && response.json() as any;
       },
     });
     const res = await fetchHelper('/comments?id=1');
@@ -34,8 +34,8 @@ describe('FetchHelper', () => {
   });
   test('transformResponse', async () => {
     const fetchHelper = FetchHelper.create({
-      transformResponse: (response, ctx) => {
-        return response[ctx?.init?.responseType]();
+      transformResponse: (response, error, ctx) => {
+        return response && response[ctx?.init?.responseType]();
       },
     });
     const res = await fetchHelper<{ id: number }[]>(`${baseURL}/comments?id=1`, {
@@ -53,8 +53,8 @@ describe('FetchHelper', () => {
         };
         return init;
       },
-      transformResponse: (response, ctx) => {
-        return response[ctx?.init?.responseType]();
+      transformResponse: (response, error, ctx) => {
+        return response && response[ctx?.init?.responseType]();
       },
     });
     const res = await fetchHelper(`${baseURL}/comments`);

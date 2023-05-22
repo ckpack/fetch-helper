@@ -1,9 +1,9 @@
-export type RequestParams = ConstructorParameters<typeof URLSearchParams>[number];
+export type RequestParams = ConstructorParameters<typeof URLSearchParams>[number] | number | number[][] | Record<string | number, number>;
 export type TransformRequest = (init: FetchHelperInit, ctx: FetchHelper) => Promise<FetchHelperInit> | FetchHelperInit;
-export type TransformResponse = (response: Response, ctx: FetchHelper) => Promise<unknown>;
+export type TransformResponse = <T = Response>(response: Response | undefined, error: Error | undefined, ctx: FetchHelper) => Promise<T>;
 
 function paramsSerializer(params?: RequestParams) {
-  return new URLSearchParams(params).toString();
+  return new URLSearchParams(params as ConstructorParameters<typeof URLSearchParams>[number]).toString();
 }
 
 export function mergeHeaders(header?: HeadersInit, header2?: HeadersInit) {
@@ -43,7 +43,7 @@ export class FetchHelper {
     this.defaultInit = fetchConfig || {};
   }
 
-  async request<T = Response>(input: FetchHelperInput, init?: FetchHelperInit): Promise<T | undefined> {
+  async request<T = Response>(input: FetchHelperInput, init?: FetchHelperInit) {
     this.input = input;
     const mergeInit: FetchHelperInit = { ...this.defaultInit, ...init, headers: mergeHeaders(this.defaultInit?.headers, init?.headers) };
 
@@ -55,22 +55,28 @@ export class FetchHelper {
       const queryString = (this.init.paramsSerializer || paramsSerializer)(this.init.params);
       if (queryString) {
         this.input = `${inputURL.href}${inputURL.search ? '&' : '?'}${queryString}`;
+      } else {
+        this.input = inputURL.href;
       }
-      else { this.input = inputURL.href; }
     }
 
+    let response: Response | undefined;
+    let error: Error | undefined;
     try {
-      const response = await (this.init.adapter || fetch)(this.input, this.init);
+      response = await (this.init.adapter || fetch)(this.input, this.init);
       if (this.init.handlerSuccess) {
         this.init?.handlerSuccess(response);
       }
-      return mergeInit.transformResponse ? mergeInit.transformResponse(response, this) : response as any;
-    }
-    catch (error: any) {
+    } catch (e: any) {
+      error = e;
       if (this.init.handlerError) {
         this.init?.handlerError(error);
+      } else {
+        throw error;
       }
-      else { throw error; }
+    } finally {
+      // eslint-disable-next-line no-unsafe-finally
+      return mergeInit.transformResponse ? mergeInit.transformResponse<T>(response, error, this) : response as T;
     }
   }
 }
