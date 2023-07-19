@@ -45,9 +45,6 @@
     "@vitest/coverage-c8": "0.31.1",
     "esbuild": "0.17.19"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "lint-staged": {
     "*.{js,ts,mjs,cjs,tsx,jsx,vue}": [
       "eslint --fix"
