@@ -11,7 +11,7 @@ describe('FetchHelper', () => {
   test('FetchHelper.create', async () => {
     const fetchHelper = FetchHelper.create<string>({
       baseURL,
-      transformResponse: (response) => {
+      transformResponse: ({ response }) => {
         return response && response.json() as any;
       },
     });
@@ -34,8 +34,8 @@ describe('FetchHelper', () => {
   });
   test('transformResponse', async () => {
     const fetchHelper = FetchHelper.create({
-      transformResponse: (response, error, ctx) => {
-        return response && response[ctx?.init?.responseType]();
+      transformResponse: ({ response, init }) => {
+        return response && response[init?.responseType]();
       },
     });
     const res = await fetchHelper<{ id: number }[]>(`${baseURL}/comments?id=1`, {
@@ -46,15 +46,15 @@ describe('FetchHelper', () => {
 
   test('transformRequest & transformResponse', async () => {
     const fetchHelper = FetchHelper.create({
-      transformRequest: (init) => {
+      transformRequest: ({ init }) => {
         init.responseType = 'json';
         init.params = {
           id: 1,
         };
         return init;
       },
-      transformResponse: (response, error, ctx) => {
-        return response && response[ctx?.init?.responseType]();
+      transformResponse: ({ response, init }) => {
+        return response && response[init?.responseType]();
       },
     });
     const res = await fetchHelper(`${baseURL}/comments`);

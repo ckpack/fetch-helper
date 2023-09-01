@@ -1,6 +1,6 @@
 export type RequestParams = ConstructorParameters<typeof URLSearchParams>[number] | number | number[][] | Record<string | number, number>;
-export type TransformRequest = (init: FetchHelperInit, ctx: FetchHelper) => Promise<FetchHelperInit> | FetchHelperInit;
-export type TransformResponse = <T = Response>(response: Response | undefined, error: Error | undefined, ctx: FetchHelper) => Promise<T>;
+export type TransformRequest = (p: { init: FetchHelperInit; input: FetchHelperInput; ctx: FetchHelper }) => Promise<FetchHelperInit> | FetchHelperInit;
+export type TransformResponse = <T = Response>(p: { response: Response | undefined; error: Error | undefined; init: FetchHelperInit; input: FetchHelperInput; ctx: FetchHelper }) => Promise<T>;
 
 function paramsSerializer(params?: RequestParams) {
   return new URLSearchParams(params as ConstructorParameters<typeof URLSearchParams>[number]).toString();
@@ -36,47 +36,44 @@ export interface FetchHelperInit extends RequestInit {
 
 export class FetchHelper {
   defaultInit?: FetchHelperInit;
-  input?: RequestInfo;
-  init?: FetchHelperInit;
 
   constructor(fetchConfig?: FetchHelperInit) {
     this.defaultInit = fetchConfig || {};
   }
 
   async request<T = Response>(input: FetchHelperInput, init?: FetchHelperInit) {
-    this.input = input;
     const mergeInit: FetchHelperInit = { ...this.defaultInit, ...init, headers: mergeHeaders(this.defaultInit?.headers, init?.headers) };
 
-    this.init = mergeInit.transformRequest ? await mergeInit.transformRequest(mergeInit, this) : mergeInit;
+    init = mergeInit.transformRequest ? await mergeInit.transformRequest({ init: mergeInit, input, ctx: this }) : mergeInit;
 
-    if (typeof this.input === 'string') {
-      const inputURL = new URL(this.input, this.init.baseURL);
+    if (typeof input === 'string') {
+      const inputURL = new URL(input, init.baseURL);
 
-      const queryString = (this.init.paramsSerializer || paramsSerializer)(this.init.params);
+      const queryString = (init.paramsSerializer || paramsSerializer)(init.params);
       if (queryString) {
-        this.input = `${inputURL.href}${inputURL.search ? '&' : '?'}${queryString}`;
+        input = `${inputURL.href}${inputURL.search ? '&' : '?'}${queryString}`;
       } else {
-        this.input = inputURL.href;
+        input = inputURL.href;
       }
     }
 
     let response: Response | undefined;
     let error: Error | undefined;
     try {
-      response = await (this.init.adapter || fetch)(this.input, this.init);
-      if (this.init.handlerSuccess) {
-        this.init?.handlerSuccess(response);
+      response = await (init.adapter || fetch)(input, init);
+      if (init.handlerSuccess) {
+        init?.handlerSuccess(response);
       }
     } catch (e: any) {
       error = e;
-      if (this.init.handlerError) {
-        this.init?.handlerError(error);
+      if (init.handlerError) {
+        init?.handlerError(error);
       } else {
         throw error;
       }
     } finally {
       // eslint-disable-next-line no-unsafe-finally
-      return mergeInit.transformResponse ? mergeInit.transformResponse<T>(response, error, this) : response as T;
+      return mergeInit.transformResponse ? mergeInit.transformResponse<T>({ response, error, init, input, ctx: this }) : response as T;
     }
   }
 }

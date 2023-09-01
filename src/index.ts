@@ -6,7 +6,7 @@ export * from './FetchHelper.js';
 const defaultConfig: FetchHelperInit = {};
 
 export type WithoutBodyMethod<T = Response> = <U = T> (input: FetchHelperInput, params?: RequestParams, options?: FetchHelperInit) => Promise<U>;
-export type WithBodyMethod<T = Response> = <U = T> (input: FetchHelperInput, body?: BodyInit | Object, options?: FetchHelperInit) => Promise<U>;
+export type WithBodyMethod<T = Response> = <U = T> (input: FetchHelperInput, body?: BodyInit | object, options?: FetchHelperInit) => Promise<U>;
 export type InputBodyMethod<T = Response> = <U = T> (options: FetchHelperInit & {
   input: FetchHelperInput
 }) => Promise<U>;
